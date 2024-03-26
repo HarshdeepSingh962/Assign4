@@ -26,6 +26,13 @@ const DigipetApp = () => {
     };
   }, []);
 
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setHappiness(prevHappiness => Math.max(prevHappiness - 10, 0));
+    }, 10000);
+    return () => clearInterval(interval);
+  }, []);
+
   const treatPet = () => {
     setHappiness(prevHappiness => Math.min(prevHappiness + 10, 100));
     setPoints(prevPoints => prevPoints + 5);
@@ -66,14 +73,17 @@ const DigipetApp = () => {
           require('./assets/deadsound.mp3')
         );
         await sound.playAsync();
+        alert('Your pet has passed away. Please start a new game.');
       })();
     }
   }, [happiness]);
 
   // Determine which image to display based on happiness level
   let petImage = require('./assets/happypet.gif');
-  if (happiness <= 50 && happiness > 0) {
+  if (happiness <= 60 && happiness > 20) {
     petImage = require('./assets/angrypet.png');
+  } else if (happiness <= 20 && happiness > 0) {
+    petImage = require('./assets/sadpet.gif');
   } else if (happiness === 0) {
     petImage = require('./assets/sadpet.gif');
   }
