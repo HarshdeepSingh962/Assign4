@@ -6,27 +6,31 @@ import { Haptic } from 'expo';
 const DigipetApp = () => {
   const [happiness, setHappiness] = useState(100);
   const [points, setPoints] = useState(0);
+  const [sound, setSound] = useState();
 
   useEffect(() => {
-    // Decrease happiness over time
-    const interval = setInterval(() => {
-      setHappiness(prevHappiness => Math.max(prevHappiness - 1, 0));
-    }, 1000);
+    // Load sound for treating the pet
+    const loadSound = async () => {
+      const { sound } = await Audio.Sound.createAsync(
+        require('./assets/treatsound.mp3')
+      );
+      setSound(sound);
+    };
+    loadSound();
 
-    return () => clearInterval(interval);
+    // Unload sound when component unmounts
+    return () => {
+      if (sound) {
+        sound.unloadAsync();
+      }
+    };
   }, []);
 
-  const treatPet = async () => {
+  const treatPet = () => {
     setHappiness(prevHappiness => Math.min(prevHappiness + 10, 100));
     setPoints(prevPoints => prevPoints + 5);
     // Play a sound
-    const soundObject = new Audio.Sound();
-    try {
-      await soundObject.loadAsync(require('./assets/treat_sound.mp3'));
-      soundObject.playAsync();
-    } catch (error) {
-      console.error('Failed to load sound', error);
-    }
+    sound.replayAsync();
   };
 
   const petPet = () => {
@@ -53,6 +57,18 @@ const DigipetApp = () => {
     setPoints(prevPoints => prevPoints + 15);
     Vibration.vibrate([200, 100, 200]);
   };
+
+  useEffect(() => {
+    if (happiness === 0) {
+      // Play dead sound
+      (async () => {
+        const { sound } = await Audio.Sound.createAsync(
+          require('./assets/deadsound.mp3')
+        );
+        await sound.playAsync();
+      })();
+    }
+  }, [happiness]);
 
   // Determine which image to display based on happiness level
   let petImage = require('./assets/happypet.gif');
