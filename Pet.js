@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Pressable, StyleSheet, Image, Vibration } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity, Vibration, Alert } from 'react-native';
 import { Audio } from 'expo-av';
 import { Haptic } from 'expo';
 
-const DigipetApp = () => {
+const TamagotchiGame = () => {
   const [happiness, setHappiness] = useState(100);
-  const [points, setPoints] = useState(0);
+  const [hunger, setHunger] = useState(100);
+  const [cleanliness, setCleanliness] = useState(100);
+  const [energy, setEnergy] = useState(100);
   const [sound, setSound] = useState();
 
   useEffect(() => {
@@ -27,56 +29,54 @@ const DigipetApp = () => {
   }, []);
 
   useEffect(() => {
+    // Decrease stats over time
     const interval = setInterval(() => {
-      setHappiness(prevHappiness => Math.max(prevHappiness - 10, 0));
-    }, 10000);
+      setHappiness(prevHappiness => Math.max(prevHappiness - 2, 0));
+      setHunger(prevHunger => Math.max(prevHunger - 1, 0));
+      setCleanliness(prevCleanliness => Math.max(prevCleanliness - 1, 0));
+      setEnergy(prevEnergy => Math.max(prevEnergy - 1, 0));
+    }, 5000);
     return () => clearInterval(interval);
   }, []);
 
   const treatPet = () => {
     setHappiness(prevHappiness => Math.min(prevHappiness + 10, 100));
-    setPoints(prevPoints => prevPoints + 5);
-    // Play a sound
-    sound.replayAsync();
+    setSound(sound => sound.replayAsync());
   };
 
-  const petPet = () => {
-    setHappiness(prevHappiness => Math.min(prevHappiness + 5, 100));
-    setPoints(prevPoints => prevPoints + 2);
-    // Trigger haptic feedback
-    Haptic.impactAsync(Haptic.ImpactFeedbackStyle.Light);
+  const feedPet = () => {
+    setHunger(prevHunger => Math.min(prevHunger + 10, 100));
+    setSound(sound => sound.replayAsync());
   };
 
-  const onSwipe = () => {
-    setHappiness(prevHappiness => Math.min(prevHappiness + 15, 100));
-    setPoints(prevPoints => prevPoints + 10);
-    Vibration.vibrate();
+  const cleanPet = () => {
+    setCleanliness(prevCleanliness => Math.min(prevCleanliness + 10, 100));
+    setSound(sound => sound.replayAsync());
   };
 
-  const onPat = () => {
-    setHappiness(prevHappiness => Math.min(prevHappiness + 10, 100));
-    setPoints(prevPoints => prevPoints + 5);
-    Vibration.vibrate([100, 200, 100]);
+  const restPet = () => {
+    setEnergy(prevEnergy => Math.min(prevEnergy + 10, 100));
+    setSound(sound => sound.replayAsync());
   };
 
-  const onWalk = () => {
+  const tapPet = () => {
     setHappiness(prevHappiness => Math.min(prevHappiness + 20, 100));
-    setPoints(prevPoints => prevPoints + 15);
-    Vibration.vibrate([200, 100, 200]);
+    setSound(sound => sound.replayAsync());
   };
 
   useEffect(() => {
-    if (happiness === 0) {
+    // Check if Tamagotchi's stats are too low
+    if (happiness === 0 || hunger === 0 || cleanliness === 0 || energy === 0) {
       // Play dead sound
       (async () => {
         const { sound } = await Audio.Sound.createAsync(
           require('./assets/deadsound.mp3')
         );
         await sound.playAsync();
-        alert('Your pet has passed away. Please start a new game.');
+        Alert.alert('Game Over', 'Your Tamagotchi has passed away. Please start a new game.');
       })();
     }
-  }, [happiness]);
+  }, [happiness, hunger, cleanliness, energy]);
 
   // Determine which image to display based on happiness level
   let petImage = require('./assets/happypet.gif');
@@ -90,29 +90,28 @@ const DigipetApp = () => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.petContainer}>
-        <Image source={petImage} style={styles.petImage} />
-        <Text style={styles.happinessText}>Happiness: {happiness}</Text>
-        <Text style={styles.pointsText}>Points: {points}</Text>
-      </View>
-      <View style={styles.buttonContainer}>
-        <Pressable style={styles.button} onPress={treatPet}>
-          <Text style={styles.buttonText}>Treat</Text>
-        </Pressable>
-        <Pressable style={styles.button} onPress={petPet}>
-          <Text style={styles.buttonText}>Pet</Text>
-        </Pressable>
-        <View style={styles.bottomButtonContainer}>
-          <Pressable style={[styles.button, styles.bottomButton]} onPress={onSwipe}>
-            <Text style={styles.buttonText}>Swipe</Text>
-          </Pressable>
-          <Pressable style={[styles.button, styles.bottomButton]} onPress={onPat}>
-            <Text style={styles.buttonText}>Pat</Text>
-          </Pressable>
-          <Pressable style={[styles.button, styles.bottomButton]} onPress={onWalk}>
-            <Text style={styles.buttonText}>Walk</Text>
-          </Pressable>
+      <TouchableOpacity onPress={tapPet}>
+        <View style={styles.petContainer}>
+          <Image source={petImage} style={styles.petImage} />
+          <Text style={styles.statText}>Happiness: {happiness}</Text>
+          <Text style={styles.statText}>Hunger: {hunger}</Text>
+          <Text style={styles.statText}>Cleanliness: {cleanliness}</Text>
+          <Text style={styles.statText}>Energy: {energy}</Text>
         </View>
+      </TouchableOpacity>
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity style={styles.button} onPress={treatPet}>
+          <Text style={styles.buttonText}>Treat</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.button} onPress={feedPet}>
+          <Text style={styles.buttonText}>Feed</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.button} onPress={cleanPet}>
+          <Text style={styles.buttonText}>Clean</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.button} onPress={restPet}>
+          <Text style={styles.buttonText}>Rest</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -132,19 +131,11 @@ const styles = StyleSheet.create({
     width: 150,
     height: 150,
   },
-  happinessText: {
-    fontSize: 20,
-    marginTop: 10,
-  },
-  pointsText: {
+  statText: {
     fontSize: 20,
     marginTop: 10,
   },
   buttonContainer: {
-    flexDirection: 'column',
-    alignItems: 'center',
-  },
-  bottomButtonContainer: {
     flexDirection: 'row',
     marginTop: 20,
   },
@@ -152,11 +143,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'blue',
     paddingHorizontal: 20,
     paddingVertical: 10,
-    marginVertical: 10,
-    borderRadius: 5,
-  },
-  bottomButton: {
     marginHorizontal: 10,
+    borderRadius: 5,
   },
   buttonText: {
     color: 'white',
@@ -164,4 +152,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default DigipetApp;
+export default TamagotchiGame;

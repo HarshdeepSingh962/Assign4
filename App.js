@@ -1,11 +1,11 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
-import Pet from './Pet';
+import TamagotchiGame from './TamagotchiGame';
 
 const App = () => {
   return (
     <View style={styles.container}>
-      <Pet />
+      <TamagotchiGame />
     </View>
   );
 };
