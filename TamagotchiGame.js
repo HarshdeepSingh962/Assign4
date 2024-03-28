@@ -41,27 +41,37 @@ const TamagotchiGame = () => {
 
   const treatPet = () => {
     setHappiness(prevHappiness => Math.min(prevHappiness + 10, 100));
-    setSound(sound => sound.replayAsync());
+    if (sound) {
+      sound.replayAsync();
+    }
   };
-
+  
   const feedPet = () => {
-    setHunger(prevHunger => Math.min(prevHunger + 10, 100));
-    setSound(sound => sound.replayAsync());
+    setHunger(prevHunger => Math.min(prevHunger + 5, 100));
+    if (sound) {
+      sound.replayAsync();
+    }
   };
 
   const cleanPet = () => {
     setCleanliness(prevCleanliness => Math.min(prevCleanliness + 10, 100));
-    setSound(sound => sound.replayAsync());
+    if (sound) {
+      sound.replayAsync();
+    }
   };
 
   const restPet = () => {
-    setEnergy(prevEnergy => Math.min(prevEnergy + 10, 100));
-    setSound(sound => sound.replayAsync());
+    setEnergy(prevEnergy => Math.min(prevEnergy + 5, 100));
+    if (sound) {
+      sound.replayAsync();
+    }
   };
-
+  
   const tapPet = () => {
     setHappiness(prevHappiness => Math.min(prevHappiness + 20, 100));
-    setSound(sound => sound.replayAsync());
+    if (sound) {
+      sound.replayAsync();
+    }
   };
 
   useEffect(() => {
@@ -78,25 +88,27 @@ const TamagotchiGame = () => {
     }
   }, [happiness, hunger, cleanliness, energy]);
 
-  // Determine which image to display based on happiness level
-  let petImage = require('./assets/happypet.gif');
-  if (happiness <= 60 && happiness > 20) {
-    petImage = require('./assets/angrypet.png');
-  } else if (happiness <= 20 && happiness > 0) {
-    petImage = require('./assets/sadpet.gif');
-  } else if (happiness === 0) {
-    petImage = require('./assets/sadpet.gif');
-  }
-
   return (
     <View style={styles.container}>
       <TouchableOpacity onPress={tapPet}>
         <View style={styles.petContainer}>
-          <Image source={petImage} style={styles.petImage} />
-          <Text style={styles.statText}>Happiness: {happiness}</Text>
-          <Text style={styles.statText}>Hunger: {hunger}</Text>
-          <Text style={styles.statText}>Cleanliness: {cleanliness}</Text>
-          <Text style={styles.statText}>Energy: {energy}</Text>
+          <Image source={require('./assets/happypet.gif')} style={styles.petImage} />
+          <Text style={styles.statText}>Happiness</Text>
+          <View style={styles.statBarContainer}>
+            <View style={[styles.statBar, { width: happiness + '%' }]}></View>
+          </View>
+          <Text style={styles.statText}>Hunger</Text>
+          <View style={styles.statBarContainer}>
+            <View style={[styles.statBar, { width: hunger + '%' }]}></View>
+          </View>
+          <Text style={styles.statText}>Cleanliness</Text>
+          <View style={styles.statBarContainer}>
+            <View style={[styles.statBar, { width: cleanliness + '%' }]}></View>
+          </View>
+          <Text style={styles.statText}>Energy</Text>
+          <View style={styles.statBarContainer}>
+            <View style={[styles.statBar, { width: energy + '%' }]}></View>
+          </View>
         </View>
       </TouchableOpacity>
       <View style={styles.buttonContainer}>
@@ -122,6 +134,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: '#fff'
   },
   petContainer: {
     alignItems: 'center',
@@ -134,6 +147,18 @@ const styles = StyleSheet.create({
   statText: {
     fontSize: 20,
     marginTop: 10,
+  },
+  statBarContainer: {
+    backgroundColor: '#ccc',
+    width: 200,
+    height: 10,
+    borderRadius: 5,
+    marginBottom: 10,
+  },
+  statBar: {
+    backgroundColor: 'green',
+    height: '100%',
+    borderRadius: 5,
   },
   buttonContainer: {
     flexDirection: 'row',
