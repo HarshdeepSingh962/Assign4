@@ -60,7 +60,7 @@ const TamagotchiGame = () => {
       setHunger(prevHunger => Math.max(prevHunger - 1, 0));
       setCleanliness(prevCleanliness => Math.max(prevCleanliness - 1, 0));
       setEnergy(prevEnergy => Math.max(prevEnergy - 1, 0));
-    }, 900);
+    }, 600);
     return () => clearInterval(interval);
   }, []);
 
@@ -124,8 +124,6 @@ const TamagotchiGame = () => {
   const handleAddPet = () => {
     // Implement logic to add the user's pet
     if (petName.trim() !== '') {
-      // Example logic: Set petImage to user's chosen image
-      // Additional logic can be implemented based on your requirements
       Alert.alert('Pet Added', `Your pet ${petName} has been added!`);
     } else {
       Alert.alert('Error', 'Please enter a name for your pet.');
@@ -177,7 +175,7 @@ const TamagotchiGame = () => {
           value={petName}
         />
         <TouchableOpacity style={styles.addButton} onPress={handleAddPet}>
-          <Text style={styles.buttonText}>Add Pet</Text>
+          <Text style={styles.buttonText}>Add Pet Name</Text>
         </TouchableOpacity>
       </View>
       <Text style={styles.pointsText}>Points: {points}</Text>

@@ -13,7 +13,7 @@ const App = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#808080', // Change background color to match TamagotchiGame
     alignItems: 'center',
     justifyContent: 'center',
   },

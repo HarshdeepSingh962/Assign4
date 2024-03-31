@@ -14,7 +14,7 @@
     "expo-haptics": "~12.1.0",
     "react": "17.0.2",
     "react-dom": "17.0.2",
-    "react-native": "https://github.com/expo/react-native/archive/sdk-43.0.0.tar.gz",
+    "react-native": "https://github.com/expo/react-native/archive/sdk-43.0.0.tar.gz"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"
