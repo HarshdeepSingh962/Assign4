@@ -1,0 +1,45 @@
+# Documentation
+
+### Components
+
+  TamagotchiGame
+- This component manages the state and logic of the Tamagotchi game.
+- It includes functionality for feeding, cleaning, resting, and playing with the pet.
+- The component also handles game over conditions and pet name input.
+
+
+### Functions
+
+  treatPet()
+- Increases the pet's happiness and updates points when the pet is treated.
+- Plays a sound effect when the pet is treated.
+
+  feedPet()
+- Increases the pet's hunger and updates points when the pet is fed.
+- Plays a sound effect when the pet is fed.
+
+  cleanPet()
+- Increases the pet's cleanliness and updates points when the pet is cleaned.
+- Plays a sound effect when the pet is cleaned.
+
+  restPet()
+- Increases the pet's energy and updates points when the pet rests.
+- Plays a sound effect when the pet rests.
+
+  tapPet()
+- Increases the pet's happiness and updates points when the pet is tapped.
+- Plays a sound effect when the pet is tapped.
+
+ restartGame()
+- Resets all pet stats and points when the game is restarted.
+
+ playGameOverSound()
+- Plays a sound effect when the game is over and the pet has passed away.
+
+ handleAddPet()
+- Handles adding the user's pet by checking if a name is entered.
+- Displays an alert for successful addition or an error message if no name is entered.
+
+Authors
+- [Harshdeep Singh](https://github.com/HarshdeepSingh962)
+
